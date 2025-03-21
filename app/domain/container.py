@@ -3,7 +3,7 @@ from app.domain.member import Member
 
 @dataclass
 class Container:
-    member: Member
+    # member: Member
     image: str
     name: str = None   # member.id + label
     label: str = None
