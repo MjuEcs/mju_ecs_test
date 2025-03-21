@@ -1,13 +1,8 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, redirect
 
 front = Blueprint('front', __name__)
 
 @front.route('/')
 def index():
-    """Render welcome patge"""
-    return render_template('index.html')
-
-@front.route('/terminal')
-def terminal():
-    """Render the terminal page"""
-    return render_template('terminal.html')
+    # 클라이언트를 '/home'으로 리다이렉트
+    return redirect('/static/index.html')

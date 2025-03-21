@@ -10,7 +10,7 @@ def create_app(config_object=None):
     """
     # Flask 애플리케이션을 생성합니다.
     app = Flask(__name__,
-                static_url_path='/',  # 정적 파일 경로 설정
+                # static_url_path='/',  # 정적 파일 경로 설정
                 static_folder='static',  # 정적 파일 폴더 지정
                 template_folder='templates')  # 템플릿 폴더 지정
     
