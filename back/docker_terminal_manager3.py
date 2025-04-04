@@ -140,9 +140,10 @@ class DockerTerminalManager:
                 container_id = self.container.id
                 # 컨테이너 정지
                 self.container.stop(timeout=1)
-                # 컨테이너 제거
-                self.container.remove(force=True)
                 print(f"컨테이너 종료됨, ID: {container_id}")
             except Exception as e:
                 print(f"컨테이너 종료 오류: {str(e)}")
             self.container = None
+
+# 애플리케이션 전체에서 사용할 싱글톤 인스턴스를 생성합니다.
+docker_terminal_manager = DockerTerminalManager()

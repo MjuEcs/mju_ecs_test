@@ -4,6 +4,7 @@ import fcntl
 import threading
 import time
 import docker
+import uuid
 
 class DockerTerminalManager:
     def __init__(self):
@@ -87,7 +88,7 @@ class DockerTerminalManager:
                     except (OSError, IOError) as e:
                         print(f"터미널 읽기 오류: {str(e)}")
                         break
-                time.sleep(0.05)  # CPU 사용량을 줄이기 위한 짧은 지연
+                time.sleep(0.01)  # CPU 사용량을 줄이기 위한 짧은 지연
             except Exception as e:
                 print(f"모니터링 오류: {str(e)}")
                 break
@@ -140,9 +141,72 @@ class DockerTerminalManager:
                 container_id = self.container.id
                 # 컨테이너 정지
                 self.container.stop(timeout=1)
-                # 컨테이너 제거
-                self.container.remove(force=True)
                 print(f"컨테이너 종료됨, ID: {container_id}")
             except Exception as e:
                 print(f"컨테이너 종료 오류: {str(e)}")
             self.container = None
+
+
+class DockerTerminalSessionManager:
+    """여러 세션의 Docker 터미널을 관리하는 클래스"""
+    
+    def __init__(self):
+        # 세션 ID를 키로, DockerTerminalManager 인스턴스를 값으로 갖는 딕셔너리
+        self.sessions = {}
+    
+    def create_session(self, output_callback, image="ubuntu:22.04", command="bash"):
+        """새로운 터미널 세션을 생성합니다."""
+        # 고유한 세션 ID를 생성합니다
+        session_id = str(uuid.uuid4())
+        
+        # 새 DockerTerminalManager 인스턴스를 생성합니다
+        terminal_manager = DockerTerminalManager()
+        container_id = terminal_manager.start_terminal(output_callback, image, command)
+        
+        if container_id:
+            # 세션을 저장합니다
+            self.sessions[session_id] = terminal_manager
+            print(f"새 세션 생성됨: {session_id}, 컨테이너: {container_id}")
+            return session_id
+        else:
+            print("세션 생성 실패")
+            return None
+    
+    def get_session(self, session_id):
+        """세션 ID로 DockerTerminalManager 인스턴스를 조회합니다."""
+        return self.sessions.get(session_id)
+    
+    def send_command(self, session_id, command):
+        """특정 세션에 명령어를 전송합니다."""
+        terminal_manager = self.get_session(session_id)
+        if terminal_manager:
+            return terminal_manager.send_command(command)
+        print(f"세션을 찾을 수 없음: {session_id}")
+        return False
+    
+    def resize_terminal(self, session_id, rows, cols):
+        """특정 세션의 터미널 크기를 조정합니다."""
+        terminal_manager = self.get_session(session_id)
+        if terminal_manager:
+            return terminal_manager.resize_terminal(rows, cols)
+        print(f"세션을 찾을 수 없음: {session_id}")
+        return False
+    
+    def close_session(self, session_id):
+        """세션을 종료하고 리소스를 정리합니다."""
+        terminal_manager = self.get_session(session_id)
+        if terminal_manager:
+            terminal_manager.stop_terminal()
+            del self.sessions[session_id]
+            print(f"세션 종료됨: {session_id}")
+            return True
+        print(f"세션을 찾을 수 없음: {session_id}")
+        return False
+    
+    def get_active_sessions(self):
+        """활성화된 세션 목록을 반환합니다."""
+        return list(self.sessions.keys())
+
+
+# 애플리케이션 전체에서 사용할 세션 매니저 인스턴스를 생성합니다.
+docker_terminal_session_manager = DockerTerminalSessionManager()
