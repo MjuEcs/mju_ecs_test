@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const term = new Terminal({
         cursorBlink: true,  // 커서 깜빡임 효과를 활성화합니다.
         theme: {
-            background: '#000',  // 배경색을 검정색으로 설정합니다.
+            background: '#1e1e1e',  // 배경색을 검정색으로 설정합니다.
             foreground: '#fff'   // 글자색을 흰색으로 설정합니다.
         }
     });
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     term.fit();  // 터미널 크기를 컨테이너에 맞게 조정합니다.
     
     // Socket.IO 서버와 연결합니다.
-    const socket = io('/os');
+    const socket = io("/docker");
     
     // 서버 연결 이벤트 처리
     socket.on('connect', function() {
