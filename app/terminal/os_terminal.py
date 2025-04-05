@@ -8,7 +8,7 @@ import signal
 import threading
 import time
 
-class TerminalManager:
+class OsTerminal:
     def __init__(self):
         # 파일 디스크립터와 자식 프로세스 ID를 초기화합니다.
         self.fd = None
@@ -102,4 +102,4 @@ class TerminalManager:
             self.fd = None
 
 # 애플리케이션 전체에서 사용할 싱글톤 인스턴스를 생성합니다.
-terminal_manager = TerminalManager()
+os_terminal = OsTerminal()

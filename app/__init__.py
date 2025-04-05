@@ -29,8 +29,8 @@ def create_app(config_object=None):
     ###             restful API 설정                ###
     ###################################################
     # 블루프린트 등록 (라우팅을 모듈화하여 관리)
-    from app.routes_rest import main as main_blueprint
-    from app.routes_front import front as front_blueprint
+    from app.rest_route.routes_rest import main as main_blueprint
+    from app.rest_route.routes_front import front as front_blueprint
     app.register_blueprint(main_blueprint)  # 메인 라우트를 애플리케이션에 등록
     app.register_blueprint(front_blueprint)
     
@@ -40,7 +40,7 @@ def create_app(config_object=None):
     ###################################################
         
     # SocketIO 이벤트 초기화 (소켓 이벤트 핸들러 등록)
-    from app import routes_socket_event  # 소켓 이벤트 핸들러를 포함한 모듈을 임포트
-    from app import routes_socket_event_os
+    from app.socket_route import routes_socket_event  # 소켓 이벤트 핸들러를 포함한 모듈을 임포트
+    from app.socket_route import routes_socket_event_os
     
     return app  # 초기화된 Flask 애플리케이션을 반환

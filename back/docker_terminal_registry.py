@@ -1,5 +1,5 @@
 from threading import Lock
-from app.docker_terminal_manager import DockerTerminalManager
+from app.terminal.docker_terminal import DockerTerminalManager
 
 class DockerTerminalRegistry:
     """사용자별 도커 터미널 인스턴스를 관리하는 레지스트리 클래스"""

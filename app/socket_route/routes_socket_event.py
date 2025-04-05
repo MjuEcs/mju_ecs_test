@@ -2,7 +2,7 @@ import docker
 from flask import request
 from flask_socketio import emit
 from app import socketio
-from app.docker_terminal_manager import DockerTerminalManager
+from app.terminal.docker_terminal import DockerTerminal
 import threading
 
 ##########################################################################
@@ -23,8 +23,8 @@ def handle_connect():
         """터미널 출력을 클라이언트에게 전송합니다."""
         socketio.emit('terminal_output', {'output': output}, namespace='/docker', room=sid)
     
-    # 새로운 DockerTerminalManager 인스턴스 생성 및 시작
-    manager = DockerTerminalManager()
+    # 새로운 DockerTerminal 인스턴스 생성 및 시작
+    manager = DockerTerminal()
     pid = manager.start_terminal(send_output)
     
     with docker_terminal_lock:

@@ -5,7 +5,7 @@ import threading
 import time
 import docker
 
-class DockerTerminalManager:
+class DockerTerminal:
     def __init__(self):
         # 도커 클라이언트 초기화
         self.client = docker.from_env()
